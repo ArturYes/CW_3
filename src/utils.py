@@ -3,17 +3,20 @@ from datetime import datetime
 
 
 def load_json(file_patch):
+    """Функция загрузки json файла"""
     with open(file_patch, 'r') as file:
         data = json.load(file)
     return data
 
 
 def convert_date(date):
-    date = date.split("T")[0].split("-")
-    return f"{date[2]}.{date[1]}.{date[0]}"
+    """Функция конвертации даты"""
+    data_time = datetime.fromisoformat(date).strftime('%d.%m.%Y')
+    return data_time
 
 
 def mask_card_number(card_number):
+    """Функция маскировки номера карты"""
     if card_number:
         card_number1 = card_number.split()
         if card_number1[0].lower() == "счет":
@@ -23,11 +26,13 @@ def mask_card_number(card_number):
 
 
 def mask_account_number(account_number):
+    """Функция маскировки счета"""
     account_number = account_number.split()
     return f"{account_number[0]} **{account_number[-1][-4:]}"
 
 
 def display_transaction(transaction):
+    """Функция формирования информации о транзакции"""
     date = convert_date(transaction['date'])
     description = transaction.get('description')
     operation_amount = (f'{transaction['operationAmount']['amount']} '
@@ -43,6 +48,7 @@ def display_transaction(transaction):
 
 
 def display_last_5_transactions(operations):
+    """Функция возвращает последние пять транзакций"""
     executed_operations = [op for op in operations if op.get('state') == 'EXECUTED']
     last_5_executed = sorted(executed_operations, key=lambda x: x['date'], reverse=True)[:5]
 
